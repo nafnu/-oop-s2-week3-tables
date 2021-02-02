@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 
 public class UserLogin extends JFrame {
 
@@ -84,6 +85,35 @@ public class UserLogin extends JFrame {
                 String userName = textField.getText();
                 String password = passwordField.getText();
                 System.out.println("Button is pressed: " +userName +":  "+password);
+
+                try {
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection(
+                            "jdbc:mysql://localhost:3306/titanicmanifest",  "Nat", "m+S0sh1@tp/6");
+
+                    PreparedStatement preparedStatement = (PreparedStatement) con.prepareStatement("select name, password from student where name=? and password = ? ");
+
+                    preparedStatement.setString(1, userName);
+                    preparedStatement.setString(2, password);
+
+
+//here sonoo is database name, root is username and password
+
+                    ResultSet rs = preparedStatement.executeQuery();
+                    if (rs.next()) {
+                        System.out.println("Logging IN");
+                        JOptionPane.showMessageDialog(btnNewButton, "You have successfully logged in");
+                    } else {
+                        System.out.println("Not allowed to login");
+                        JOptionPane.showMessageDialog(btnNewButton, "Wrong Username & Password");
+                    }
+
+
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                } finally {
+
+                }
             }
         });
 
